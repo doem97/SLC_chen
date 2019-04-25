@@ -1,0 +1,1 @@
+/output/ can save all output images to view.
