@@ -108,14 +108,20 @@ class DataPath(object):
         fields:
             data_path, ori_folder, resize_folder
     """
-
-    def __init__(self, root_path):
-        self.data_path = os.path.join(root_path, "dataset")
-        self.model_path = os.path.join(root_path, "model")
-        self.ori_folder = os.path.join(self.data_path, "origin")
+    init_flag = False
+    data_path = None
+    model_path = None
+    ori_folder = None
+    resize_folder = None
+    index_file = None
     
-    def setResizeFolder(self, height, width):
-        self.resize_folder = os.path.join(self.data_path, "resized_{}_{}".format(height, width))
+    def initSettings(root_path):
+        DataPath.data_path = os.path.join(root_path, "dataset")
+        DataPath.model_path = os.path.join(root_path, "model")
+        DataPath.ori_folder = os.path.join(DataPath.data_path, "origin")
+    
+    def setResizeFolder(height, width):
+        DataPath.resize_folder = os.path.join(DataPath.data_path, "resized_{}_{}".format(height, width))
 
-    def setIndexFile(self, index_file_name):
-        self.index_file = os.path.join(self.data_path, index_file_name)
+    def setIndexFile(index_file_name):
+        DataPath.index_file = os.path.join(DataPath.data_path, index_file_name)

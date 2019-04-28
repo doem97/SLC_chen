@@ -1,19 +1,26 @@
 import os
 import configparser
 import SLC_utils
-import SLC_models
+from SLC_utils import DataPath
+from keras.callbacks import ModelCheckpoint
 
 
 class SkinLesionClassify(object):
     """ SkinLesionClassify:
-        height, width, datapath
+        a class that controls the process of thorough classification training.
+        control: prepare data, create datageneration, test and give score
+
+        it's from the view of experience, things involved in improving model should
+        be controled by SLCModel(), and others should be controled by SkinLesionClassify()
     """
 
     def __init__(self, config_file):
+        """ set
+        """
         if not os.path.exists(config_file):
             raise SystemExit("the config file {} didn't exists!".format(config_file))
         self.readConfig(config_file)
-        self.iniIndexList(self.datapath.index_file)
+        self.iniIndexList(DataPath.index_file)
         self.splitIndexList(self.ratio)
 
     def readConfig(self, config_file):
@@ -23,9 +30,9 @@ class SkinLesionClassify(object):
         self.height = cf.getint("data_profile","height")
         self.width = cf.getint("data_profile","width")
         self.input_shape = (self.height, self.width, 3)
-        self.datapath = SLC_utils.DataPath(cf.get("data_profile","root_path"))
-        self.datapath.setResizeFolder(self.height, self.width)
-        self.datapath.setIndexFile(cf.get("data_profile","index_file"))
+        DataPath.initSettings(cf.get("data_profile","root_path"))
+        DataPath.setResizeFolder(self.height, self.width)
+        DataPath.setIndexFile(cf.get("data_profile","index_file"))
         self.ratio = cf.get("data_profile","ratio").split(",")
         self.image_gen_args_dict = SLC_utils.create_dict_from_section(cf["image_gen"])
         self.readTrainArgs(cf["train_args"])
@@ -37,15 +44,9 @@ class SkinLesionClassify(object):
         self.final_epoch = section.getint('final_epoch')
 
     def resizeImages(self):
-        SLC_utils.resize_image(self.datapath.ori_folder, self.datapath.resize_folder, self.index_list, (self.height, self.width))
-
-    def loadModel(self):
-        """ self.slcmodel.model is the keras model
-            object calling
+        """ remember to use brackets with it.
         """
-        self.slcmodel = SLC_models.SLCModel(self.model_args)
-        self.slcmodel.loadCheckPoint(self.datapath.model_path)
-        self.slcmodel.loadModel(self.input_shape, len(self.class2num))
+        SLC_utils.resize_image(DataPath.ori_folder, DataPath.resize_folder, self.index_list, (self.height, self.width))
 
     def iniIndexList(self, index_file):
         """ index_file should be .csv
@@ -69,23 +70,32 @@ class SkinLesionClassify(object):
         train_data_flow = image_datagen.flow(data, label, batch_size = self.batch_size) # batch_size should only show up here in data augmentation situation
         return train_data_flow
     
+    def loadCheckPoint(self, model_name):
+        monitor = 'val_acc'
+        checkpoint = ModelCheckpoint(os.path.join(DataPath.model_path, "{}".format(model_name)+"_{epoch:02d}-{val_loss:.2f}.hdf5"), monitor = monitor, save_best_only = True, verbose = 1, period = 1)
+        print("checkpoint is set, models will be saved into dir {}, monitoring variable: {}".format(DataPath.model_path, monitor))
+        return [checkpoint]
+
     def getData(self, index_list):
-        image = SLC_utils.load_image(self.datapath.resize_folder, index_list, self.height, self.width)
+        image = SLC_utils.load_image(DataPath.resize_folder, index_list, self.height, self.width)
         label = SLC_utils.load_ctg_label(index_list, self.index_map, self.class2num)
         return image, label
 
-    def train(self):
+    def train(self, slc_model):
+        """ slc_model is a SLCModel object
+        """
         print("begin to load training data...")
         train_image, train_label = self.getData(self.train_list)
         print("begin to load validation data...")
         val_image, val_label = self.getData(self.val_list)
         train_data_flow = self.constructDataFlow(train_image, train_label)
-        history = self.slcmodel.model.fit_generator(train_data_flow, 
+        checkpoint_list = self.loadCheckPoint(slc_model.model_name)
+        history = slc_model.model.fit_generator(train_data_flow, 
         validation_data = (val_image, val_label), 
         steps_per_epoch = 1, 
         initial_epoch = self.initial_epoch, 
         epochs = self.final_epoch, 
-        callbacks = self.slcmodel.checkpoint,
+        callbacks = checkpoint_list,
         workers = 4,
         verbose = 1)
 
