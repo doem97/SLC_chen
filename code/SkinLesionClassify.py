@@ -1,8 +1,9 @@
 import os
 import configparser
 import SLC_utils
+from time import time
 from SLC_utils import DataPath
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, TensorBoard
 
 
 class SkinLesionClassify(object):
@@ -37,6 +38,7 @@ class SkinLesionClassify(object):
         self.image_gen_args_dict = SLC_utils.create_dict_from_section(cf["image_gen"])
         self.readTrainArgs(cf["train_args"])
         self.model_args = cf["model"]
+        self.save_models = cf.getboolean("control", "save_models")
 
     def readTrainArgs(self, section):
         self.batch_size = section.getint("batch_size")
@@ -71,10 +73,16 @@ class SkinLesionClassify(object):
         return train_data_flow
     
     def loadCheckPoint(self, model_name):
-        monitor = 'val_acc'
-        checkpoint = ModelCheckpoint(os.path.join(DataPath.model_path, "{}".format(model_name)+"_{epoch:02d}-{val_loss:.2f}.hdf5"), monitor = monitor, save_best_only = True, verbose = 1, period = 1)
-        print("checkpoint is set, models will be saved into dir {}, monitoring variable: {}".format(DataPath.model_path, monitor))
-        return [checkpoint]
+        tensorboard_dir = os.path.join(DataPath.log_path, "{}_{}".format(model_name, time()))
+        tensorboard = TensorBoard(log_dir = tensorboard_dir)
+        print("tensorboard: dir will be saved into {}".format(tensorboard_dir))
+        if self.save_models:
+            monitor = 'val_acc'
+            checkpoint = ModelCheckpoint(os.path.join(DataPath.model_path, "{}".format(model_name)+"_{epoch:02d}-{val_loss:.2f}.hdf5"), monitor = monitor, save_best_only = True, verbose = 1, period = 1)
+            print("checkpoint: models will be saved into {}, monitoring variable: {}".format(DataPath.model_path, monitor))
+            return [checkpoint, tensorboard]
+        else:
+            return [tensorboard]
 
     def getData(self, index_list):
         image = SLC_utils.load_image(DataPath.resize_folder, index_list, self.height, self.width)

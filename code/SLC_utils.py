@@ -109,15 +109,11 @@ class DataPath(object):
             data_path, ori_folder, resize_folder
     """
     init_flag = False
-    data_path = None
-    model_path = None
-    ori_folder = None
-    resize_folder = None
-    index_file = None
     
     def initSettings(root_path):
         DataPath.data_path = os.path.join(root_path, "dataset")
         DataPath.model_path = os.path.join(root_path, "model")
+        DataPath.log_path = os.path.join(root_path, "log")
         DataPath.ori_folder = os.path.join(DataPath.data_path, "origin")
     
     def setResizeFolder(height, width):

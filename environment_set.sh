@@ -1,5 +1,10 @@
 #!/bin/bash
 
+
+# for tensorflow Docker:
+# apt update && apt install -y git-core wget libsm6 libxext6 libxrender-dev
+# pip install keras opencv-python pandas tqdm
+
 CURRENT=`pwd`
 DATA_PATH="${CURRENT}/SLC_chen/dataset"
 
