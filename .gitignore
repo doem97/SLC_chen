@@ -1,3 +1,5 @@
+code/__pycache__
+
 dataset/origin/*.jpg
 dataset/resized_*
 !dataset/README.md

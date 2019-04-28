@@ -1,28 +1,43 @@
 import os
-from models import dilated_VGG, resnet_v1
+import models
+import configparser
 from keras.optimizers import Adam
-from keras.callbacks import ModelCheckpoint
 
 class SLCModel(object):
+    """ Control everything connected to the stastic model, including:
+        losses, metrics, optimizer, model(input, output)
 
-    model_dict = {"dilated_VGG":dilated_VGG, "resnet_v1":resnet_v1}
+        it's from the view of experience, things involved in improving model should
+        be controled by SLCModel(), and others should be controled by SkinLesionClassify()
+    """
 
-    def __init__(self, section):
+    def __init__(self, config_file):
         """ receives cf section configparser.ConfigParser()["model"]
         """
+        cf = configparser.ConfigParser()
+        cf.read(config_file)
+        section = cf["model"]
         self.loss = section.get('loss')
         self.metrics = section.get('metrics').split(',')
-        self.optimizer = self.getOptimizer(section.get('optimizer'))
-        self.model_name = section.get('model')
+        self.getOptimizer(section.get('optimizer'))
+        self.height = cf.getint("data_profile","height")
+        self.width = cf.getint("data_profile","width")
+        self.input_shape = (self.height, self.width, 3)
+        self.output_shape = cf.getint("data_profile","output_shape")
     
-    def loadCheckPoint(self, model_folder):
-        self.checkpoint = [ModelCheckpoint(os.path.join(model_folder, "{}".format(self.model_name)+"_{epoch:02d}-{val_loss:.2f}.hdf5"), monitor = 'val_acc', save_best_only = True, verbose = 1, period = 10)]
-    
-    def loadModel(self, input_shape, output_shape):
-        """ should be load after init
+    def loadModel(self, model_name = None, **kwargs):
+        """ define self.model, self.model_name by model name and compile it
         """
-        model_selected = SLCModel.model_dict[self.model_name]
-        self.model = model_selected(input_shape, output_shape)
+        if not model_name:
+            raise ValueError("the model_name didn't provided!")
+        self.model_name = model_name
+        l1 = []
+        for i,v in kwargs.items():
+            if isinstance(v, str):
+                l1.append("{} = '{}'".format(i,v))
+            else:
+                l1.append("{} = {}".format(i,v))
+        exec("self.model = models.{}(self.input_shape, self.output_shape, {})".format(model_name, ', '.join(l1)))
         print(self.model.summary())
         self.model.compile(optimizer = self.optimizer, loss = self.loss, metrics = self.metrics)
 
@@ -30,8 +45,8 @@ class SLCModel(object):
         """ optimizer_param is a string, and can be modified here.
         """
         if optimizer_param == "adam":
-            optimizer = Adam(1e-3)
+            self.optimizer = Adam(1e-3)
         elif optimizer_param == "rmsprop":
-            optimizer = optimizer_param # 'rmsprop' can be passed directly
+            self.optimizer = optimizer_param # 'rmsprop' can be passed directly
         else:
             raise ValueError("optimizer config {} isn't defined!".format(optimizer_param))

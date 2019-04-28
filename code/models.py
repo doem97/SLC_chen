@@ -92,7 +92,7 @@ def resnet_layer(inputs,
         x = conv(x)
     return x
 
-def resnet_v1(input_shape, output_shape, depth=50):
+def resnet_v1(input_shape, output_shape, **kwargs):
     """ResNet Version 1 Model builder [a]
 
     Stacks of 2 x (3 x 3) Conv2D-BN-ReLU
@@ -120,6 +120,10 @@ def resnet_v1(input_shape, output_shape, depth=50):
     # Returns
         model (Model): Keras model instance
     """
+    if set(kwargs) == {'depth'}:
+        depth = kwargs['depth']
+    else:
+        raise ValueError("resnet_v1 function receives parameter: depth")
     if (depth - 2) % 6 != 0:
         raise ValueError('depth should be 6n+2 (eg 20, 32, 44 in [a])')
     # Start model definition.

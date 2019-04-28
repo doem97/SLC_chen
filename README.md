@@ -2,6 +2,8 @@
 
 SLC is a Skin Lesion Classification-or Image Classification structure that features in high-level operations.
 
+From the view of experience, things involved in improving model should be controled by `SLCModel()`, and others should be controled by `SkinLesionClassify()`.
+
 # Notice
 
 - /code folder should be more stastic and .gitignore file will ignore tracking operations in /experience_space
