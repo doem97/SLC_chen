@@ -49,6 +49,12 @@ def resize_image(ori_folder, resize_folder, index_list, re_size):
         resize_image = cv.resize(ori_image, re_size, interpolation=cv.INTER_CUBIC)
         cv.imwrite(os.path.join(resize_folder, img_filename), resize_image)
 
+def create_class_splited_list(index_map, class2num):
+    splited = np.empty((len(class2num), 0)).tolist()
+    for i,v in index_map.items():
+        splited[class2num[v]].append(i)
+    return splited
+
 def split_index_list(index_list, split_ratio):
     """ index_list is a list of all index, split_ratio is [train, val, test] ratio.
     """

@@ -64,7 +64,15 @@ class SkinLesionClassify(object):
             should be used after iniIndexList
         """
         print("cutting the index list...")
-        self.train_list, self.val_list, self.test_list = SLC_utils.split_index_list(self.index_list, split_ratio)
+        self.train_list = []
+        self.val_list = []
+        self.test_list = []
+        splited_list = SLC_utils.create_class_splited_list(self.index_map, self.class2num)
+        for i in splited_list:
+            train_list, val_list, test_list = SLC_utils.split_index_list(i, split_ratio)
+            self.train_list.extend(train_list)
+            self.val_list.extend(val_list)
+            self.test_list.extend(test_list)
 
     def constructDataFlow(self, data, label):
         image_datagen = SLC_utils.construct_data_gen_from_dict(self.image_gen_args_dict)
