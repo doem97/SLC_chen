@@ -1,8 +1,10 @@
 import os
-import configparser
 import SLC_utils
+import numpy as np
+import configparser
 from time import time
 from SLC_utils import DataPath
+from sklearn.model_selection import train_test_split
 from keras.callbacks import ModelCheckpoint, TensorBoard
 
 
@@ -34,7 +36,8 @@ class SkinLesionClassify(object):
         DataPath.initSettings(cf.get("data_profile","root_path"))
         DataPath.setResizeFolder(self.height, self.width)
         DataPath.setIndexFile(cf.get("data_profile","index_file"))
-        self.ratio = cf.get("data_profile","ratio").split(",")
+        temp_ratio = cf.get("data_profile","ratio").split(",")
+        self.ratio = [int(temp_ratio[0]),int(temp_ratio[1]),int(temp_ratio[2])]
         self.image_gen_args_dict = SLC_utils.create_dict_from_section(cf["image_gen"])
         self.readTrainArgs(cf["train_args"])
         self.model_args = cf["model"]
@@ -53,6 +56,9 @@ class SkinLesionClassify(object):
     def iniIndexList(self, index_file):
         """ index_file should be .csv
             init the index_list, index_map, class_list
+            index_list: a list of all data's index(string)
+            index_map: mapping, {index(string):label(string)}
+            class2num: mapping, {label(string):categorical_index(array)}
         """
         if not os.path.exists(index_file):
             raise SystemExit("index_file {} doesn't exist!".format(index_file))
@@ -60,19 +66,12 @@ class SkinLesionClassify(object):
         self.index_list, self.index_map, self.class2num = SLC_utils.read_index_file(index_file)
 
     def splitIndexList(self, split_ratio):
-        """ split index list and return three lists.
-            should be used after iniIndexList
+        """ split the list into three parts:
+            train_list, val_list, test_list
+            each is [index1(string), index2...]
         """
         print("cutting the index list...")
-        self.train_list = []
-        self.val_list = []
-        self.test_list = []
-        splited_list = SLC_utils.create_class_splited_list(self.index_map, self.class2num)
-        for i in splited_list:
-            train_list, val_list, test_list = SLC_utils.split_index_list(i, split_ratio)
-            self.train_list.extend(train_list)
-            self.val_list.extend(val_list)
-            self.test_list.extend(test_list)
+        self.train_list, self.val_list, self.test_list = SLC_utils.split_index_list(self.index_list, split_ratio)
 
     def constructDataFlow(self, data, label):
         image_datagen = SLC_utils.construct_data_gen_from_dict(self.image_gen_args_dict)
@@ -115,8 +114,11 @@ class SkinLesionClassify(object):
         workers = 4,
         verbose = 1)
 
-    def evaluation():
-        return 0
-    
-    def test():
-        return 0
+    def evaluation(self, slc_model, save_results = False):
+        """ wait: save_results didn't used cause labels may be write into .csv?
+            slc_model is a SLCModel object
+        """ 
+        test_image, test_label = self.getData(self.test_list)
+        scalar = slc_model.model.evaluate(test_image, test_label, verbose = 1)
+        for i in range(len(slc_model.model.metrics_names)):
+            print("test {} is {}".format(slc_model.model.metrics_names[i], scalar[i]))

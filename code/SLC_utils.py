@@ -58,9 +58,8 @@ def create_class_splited_list(index_map, class2num):
 def split_index_list(index_list, split_ratio):
     """ index_list is a list of all index, split_ratio is [train, val, test] ratio.
     """
-    random.seed(4)
+    random.seed(4) # for reproductive
     random.shuffle(index_list)
-    split_ratio = [int(split_ratio[0]),int(split_ratio[1]),int(split_ratio[2])]
     train_lenth = int((split_ratio[0]/np.sum(split_ratio))*len(index_list))
     val_lenth = int((len(index_list) - train_lenth)*(split_ratio[1]/(split_ratio[1] + split_ratio[2])))
     test_lenth = (len(index_list) - train_lenth - val_lenth)
@@ -120,6 +119,7 @@ class DataPath(object):
         DataPath.data_path = os.path.join(root_path, "dataset")
         DataPath.model_path = os.path.join(root_path, "model")
         DataPath.log_path = os.path.join(root_path, "log")
+        DataPath.output_path = os.path.join(root_path, "output")
         DataPath.ori_folder = os.path.join(DataPath.data_path, "origin")
     
     def setResizeFolder(height, width):
