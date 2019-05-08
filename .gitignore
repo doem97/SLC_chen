@@ -9,7 +9,6 @@ experience_space/*
 
 log/*
 !log/README.md
-!log/UPDATE.md
 
 model/*.hdf5
 

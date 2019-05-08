@@ -2,8 +2,8 @@ import os
 import SLC_utils
 import numpy as np
 import configparser
-from time import time
 from SLC_utils import DataPath
+from time import strftime, gmtime
 from sklearn.model_selection import train_test_split
 from keras.callbacks import ModelCheckpoint, TensorBoard
 
@@ -80,7 +80,7 @@ class SkinLesionClassify(object):
         return train_data_flow
     
     def loadCheckPoint(self, model_name):
-        tensorboard_dir = os.path.join(DataPath.log_path, "{}_{}".format(model_name, time()))
+        tensorboard_dir = os.path.join(DataPath.log_path, "{}_{}".format(model_name, strftime("%Y%d%m_%H%M%S", gmtime())))
         tensorboard = TensorBoard(log_dir = tensorboard_dir)
         print("tensorboard: dir will be saved into {}".format(tensorboard_dir))
         if self.save_models:

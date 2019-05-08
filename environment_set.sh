@@ -1,7 +1,8 @@
 #!/bin/bash
 
+# upload current file to the cloud to use, you should modify by yourself first.
 
-# for tensorflow Docker:
+# for tensorflow Docker (vast.ai):
 # apt update && apt install -y git-core wget libsm6 libxext6 libxrender-dev
 # pip install keras opencv-python pandas tqdm
 
