@@ -1,52 +1,8 @@
-import keras
 from keras.models import Model
-from keras.layers import Add, Concatenate, Flatten, Dense, Input, Dropout, Activation, Reshape, Convolution2D, MaxPooling2D, ZeroPadding2D, UpSampling2D, AtrousConvolution2D, BatchNormalization
+from keras.layers import Add, Flatten, Dense, Input, Activation, BatchNormalization
 from keras.layers import Conv2D, AveragePooling2D
 from keras.regularizers import l2
 
-def dilated_VGG(input_shape, output_shape):
-    inputs = Input(input_shape)
-    pad1 = ZeroPadding2D((1, 1), input_shape=input_shape)(inputs)
-    conv1 = Convolution2D(64, 3, 3, activation='relu', name='conv1_1')(pad1)
-    conv1 = ZeroPadding2D((1, 1))(conv1)
-    conv1 = Convolution2D(64, 3, 3, activation='relu', name='conv1_2')(conv1)
-    pool1 = MaxPooling2D((2, 2), strides=(2, 2))(conv1)
-
-    pad2 = ZeroPadding2D((1, 1))(pool1)
-    conv2 = Convolution2D(128, 3, 3, activation='relu', name='conv2_1')(pad2)
-    conv2 = ZeroPadding2D((1, 1))(conv2)
-    conv2 = Convolution2D(128, 3, 3, activation='relu', name='conv2_2')(conv2)
-    pool2 = MaxPooling2D((2, 2), strides=(2, 2))(conv2)
-
-    pad3 = ZeroPadding2D((1, 1))(pool2)
-    conv3 = Convolution2D(256, 3, 3, activation='relu', name='conv3_1')(pad3)
-    conv3 = ZeroPadding2D((1, 1))(conv3)
-    conv3 = Convolution2D(256, 3, 3, activation='relu', name='conv3_2')(conv3)
-    conv3 = ZeroPadding2D((1, 1))(conv3)
-    conv3 = Convolution2D(256, 3, 3, activation='relu', name='conv3_3')(conv3)
-    pool3 = MaxPooling2D((2, 2), strides=(2, 2))(conv3)
-
-    pad4 = ZeroPadding2D((1, 1))(pool3)
-    conv4 = AtrousConvolution2D(512, 3, 3, activation='relu', name='conv4_1')(pad4)
-    conv4 = ZeroPadding2D((1, 1))(conv4)
-    conv4 = AtrousConvolution2D(512, 3, 3, activation='relu', name='conv4_2')(conv4)
-    conv4 = ZeroPadding2D((1, 1))(conv4)
-    conv4 = AtrousConvolution2D(512, 3, 3, activation='relu', name='conv4_3')(conv4)
-    pool4 = MaxPooling2D((2, 2), strides=(2, 2))(conv4)
-
-    pad5 = ZeroPadding2D((1, 1))(pool4)
-    conv5 = AtrousConvolution2D(512, 3, 3, activation='relu', name='conv5_1')(pad5)
-    conv5 = ZeroPadding2D((1, 1))(conv5)
-    conv5 = AtrousConvolution2D(512, 3, 3, activation='relu', name='conv5_2')(conv5)
-    conv5 = ZeroPadding2D((1, 1))(conv5)
-    conv5 = AtrousConvolution2D(512, 3, 3, activation='relu', name='conv5_3')(conv5)
-
-    out_dense = Dense(output_shape, activation = 'relu')(conv5)
-
-
-    model = Model(input=inputs, output=out_dense)
-
-    return model
 
 def resnet_layer(inputs,
                  num_filters=16,
@@ -153,7 +109,7 @@ def resnet_v1(input_shape, output_shape, **kwargs):
                                  strides=strides,
                                  activation=None,
                                  batch_normalization=False)
-            x = keras.layers.add([x, y])
+            x = Add()([x, y])
             x = Activation('relu')(x)
         num_filters *= 2
 

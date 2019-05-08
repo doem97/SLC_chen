@@ -8,10 +8,11 @@
 
 CURRENT=`pwd`
 DATA_PATH="${CURRENT}/SLC_chen/dataset"
+IMAGE_ID="resized_128_128"
 
 git clone https://github.com/doem97/SLC_chen.git
-# will init a resized_128_128 folder for quick-experience.
-wget -P $DATA_PATH https://storage.googleapis.com/skin-lesion-classification_bucket/resized_128_128.zip
-unzip -q "${DATA_PATH}/resized_128_128.zip" -d $DATA_PATH
-rm "${DATA_PATH}/resized_128_128.zip"
-echo "resized_128_128 downloaded finished and can be train."
+# will init a ${IMAGE_ID} folder for quick-experience.
+wget -P $DATA_PATH https://storage.googleapis.com/skin-lesion-classification_bucket/${IMAGE_ID}.zip
+unzip -q "${DATA_PATH}/${IMAGE_ID}.zip" -d $DATA_PATH
+rm "${DATA_PATH}/${IMAGE_ID}.zip"
+echo "${IMAGE_ID} downloaded finished and can be train."

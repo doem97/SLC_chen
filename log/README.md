@@ -14,3 +14,4 @@ This log file is to trace *any* detailed changes during developing.
 
 1. change time format of checkpoint to modelname_yymmdd_hhmmss (use UST time instead)
 2. add things to README.md
+3. change models.py to a folder
