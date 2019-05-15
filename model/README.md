@@ -1,1 +1,1 @@
-models will be saved into here, but due to high space occupation, the models wouldn't be tracked.
+models `.hdf5` files will be saved into here, but due to high space occupation, the models wouldn't be tracked.

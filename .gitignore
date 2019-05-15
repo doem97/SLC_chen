@@ -4,8 +4,8 @@ dataset/origin/*.jpg
 dataset/resized_*
 !dataset/README.md
 
-experience_space/*
-!experience_space/README.md
+experiment_space/*
+!experiment_space/README.md
 
 log/*
 !log/README.md

@@ -13,7 +13,7 @@ class SkinLesionClassify(object):
         a class that controls the process of thorough classification training.
         control: prepare data, create datageneration, test and give score
 
-        it's from the view of experience, things involved in improving model should
+        it's from the view of experiments, things involved in improving model should
         be controled by SLCModel(), and others should be controled by SkinLesionClassify()
     """
 

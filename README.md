@@ -29,7 +29,7 @@ pc.train(mc)
         - You can choose what dataset size to use in script
         - Original images didn't provided with download link cause its too huge
 
-2. Move into dir `SLC_chen/experience_space/`, and do experiences.
+2. Move into dir `SLC_chen/experiment_space/`, and do your experiments.
 
 ## SkinLesionClassify()
 
@@ -101,6 +101,6 @@ slc.evaluation(slc_model)
 
 # Notice
 
-- /code folder should be more stastic and .gitignore file will ignore tracking operations in /experience_space
+- /code folder should be more stastic and .gitignore file will ignore tracking operations in /experiment_space
 - data files can be orgnized like:
     - /dataset/HAM10000_metadata.csv,/origin,/resized_{}_{}

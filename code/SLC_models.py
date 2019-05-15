@@ -7,7 +7,7 @@ class SLCModel(object):
     """ Control everything connected to the stastic model, including:
         losses, metrics, optimizer, model(input, output)
 
-        it's from the view of experience, things involved in improving model should
+        it's from the view of experiments, things involved in improving model should
         be controled by SLCModel(), and others should be controled by SkinLesionClassify()
     """
 
