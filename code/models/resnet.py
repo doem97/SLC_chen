@@ -206,7 +206,7 @@ def resnet_v2(input_shape, output_shape, **kwargs):
                                  strides=strides,
                                  activation=None,
                                  batch_normalization=False)
-            x = keras.layers.add([x, y])
+            x = Add()([x, y])
 
         num_filters_in = num_filters_out
 

@@ -15,3 +15,8 @@ This log file is to trace *any* detailed changes during developing.
 1. change time format of checkpoint to modelname_yymmdd_hhmmss (use UST time instead)
 2. add things to README.md
 3. change models.py to a folder
+
+5/18/2019
+
+1. fix Add() bug in resnet_v2
+2. fix 8 classes bug
