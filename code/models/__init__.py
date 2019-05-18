@@ -1,1 +1,1 @@
-from .resnet import resnet_v1
+from .resnet import resnet_v1, resnet_v2

@@ -6,6 +6,8 @@ dataset/resized_*
 
 experiment_space/*
 !experiment_space/README.md
+!experiment_space/script_template.py
+!experiment_space/SLC_template.conf
 
 log/*
 !log/README.md

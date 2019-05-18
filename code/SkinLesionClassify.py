@@ -4,7 +4,6 @@ import numpy as np
 import configparser
 from SLC_utils import DataPath
 from time import strftime, gmtime
-from sklearn.model_selection import train_test_split
 from keras.callbacks import ModelCheckpoint, TensorBoard
 
 
