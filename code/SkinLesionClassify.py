@@ -84,7 +84,7 @@ class SkinLesionClassify(object):
         print("tensorboard: dir will be saved into {}".format(tensorboard_dir))
         if self.save_models:
             monitor = 'val_acc'
-            checkpoint = ModelCheckpoint(os.path.join(DataPath.model_path, "{}".format(model_name)+"_{epoch:02d}-{val_loss:.2f}.hdf5"), monitor = monitor, save_best_only = True, verbose = 1, period = 1)
+            checkpoint = ModelCheckpoint(os.path.join(DataPath.model_path, "{}".format(model_name)+".hdf5"), monitor = monitor, save_best_only = True, verbose = 1, period = 1)
             print("checkpoint: models will be saved into {}, monitoring variable: {}".format(DataPath.model_path, monitor))
             return [checkpoint, tensorboard]
         else:
