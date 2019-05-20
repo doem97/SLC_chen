@@ -224,3 +224,9 @@ def resnet_v2(input_shape, output_shape, **kwargs):
     # Instantiate model.
     model = Model(inputs=inputs, outputs=outputs)
     return model
+
+def resnet50(input_shape, output_shape, **kwargs):
+    model = keras.applications.resnet.resnet50(include_top=False, weights='imagenet', input_tensor=None, input_shape=input_shape, pooling='max')
+    output_layer = Dense(output_shape, activation='softmax', kernel_initializer='he_normal')(model.output)
+    model = Model(inputs= model.input, outputs= output_layer)
+    return model
