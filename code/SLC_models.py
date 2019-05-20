@@ -30,6 +30,8 @@ class SLCModel(object):
         """
         if not model_name:
             raise ValueError("the model_name didn't provided!")
+        elif model_name not in models.model_list:
+            raise ValueError("Can't find model {}. Models can be used: {}".format(model_name, models.model_list))
         self.model_name = model_name
         l1 = []
         for i,v in kwargs.items():
