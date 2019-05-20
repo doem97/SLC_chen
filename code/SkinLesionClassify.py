@@ -79,12 +79,13 @@ class SkinLesionClassify(object):
         return train_data_flow
     
     def loadCheckPoint(self, model_name):
-        tensorboard_dir = os.path.join(DataPath.log_path, "{}_{}".format(model_name, strftime("%Y%m%d_%H%M%S", gmtime())))
+        model_index = "{}_{}".format(model_name, strftime("%Y%m%d_%H%M%S", gmtime()))
+        tensorboard_dir = os.path.join(DataPath.log_path, model_index)
         tensorboard = TensorBoard(log_dir = tensorboard_dir)
         print("tensorboard: dir will be saved into {}".format(tensorboard_dir))
         if self.save_models:
             monitor = 'val_acc'
-            checkpoint = ModelCheckpoint(os.path.join(DataPath.model_path, "{}".format(model_name)+".hdf5"), monitor = monitor, save_best_only = True, verbose = 1, period = 1)
+            checkpoint = ModelCheckpoint(os.path.join(DataPath.model_path, model_index+".hdf5"), monitor = monitor, save_best_only = True, verbose = 1, period = 1)
             print("checkpoint: models will be saved into {}, monitoring variable: {}".format(DataPath.model_path, monitor))
             return [checkpoint, tensorboard]
         else:
