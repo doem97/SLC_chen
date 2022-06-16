@@ -1,20 +1,23 @@
-# SLC_chen Introduction
+# Introduction
 
-SLC is an Image Classification framework for large-scale DL experiments. It feautres in simple usage and convinient log tracking.
+SLC is an KERAS framework for large-scale deep learning experiments. It feautres in simple usage and convinient experienments tracking.
 
 # Brief Summary
 
-The main idea of the project is that the deep-learning experiment include two modules:  _process control_ and _model control_. The two modules are separate and composable. You can do a train as simple as:
+The main idea of the project is that the deep-learning experiment include two modules:  _process control_ and _model control_. You can train model as simple as:
 
 ```python
-pc = ProcessControl('config_file')
-mc = ModelControl('config_file')
-pc.train(mc)
+exp = ProcessControl('config_file')
+model = ModelControl('config_file')
+exp.train(mc)
+# 
 ```
 
-**All-in-one config file.** In above pseudo-code, all parameters are loaded via `config_file`, that means just track the `config_file`, and it will be easy to reproduce the experiment and save huge-scales-parameters.
+**All-in-one config file.** As in above pseudo-code, `config_file` is an all-in-one config of the training pipeline, model design, data processing and evaluation.
 
-# Usage
+# Detail Usage
+
+A simple classification exp to show the power of SLC.
 
 ## Pre-Settings
 
