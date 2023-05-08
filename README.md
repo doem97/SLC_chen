@@ -1,8 +1,19 @@
-# Introduction
+
+<div align="center">
+
+<h1 align="center">🔬SLC Chen</h1>
+
+Skin Lesion Classification framework based on Keras.
+
+皮肤镜图像病理分类框架。
+
+</div>
+
+# Introduction 💡
 
 SLC is an KERAS framework for large-scale deep learning experiments. It feautres in simple usage and convinient experienments tracking.
 
-# Brief Summary
+# One-click Usage 🧯
 
 The main idea of the project is that the deep-learning experiment include two modules:  _process control_ and _model control_. You can train model as simple as:
 
@@ -10,12 +21,11 @@ The main idea of the project is that the deep-learning experiment include two mo
 exp = ProcessControl('config_file')
 model = ModelControl('config_file')
 exp.train(mc)
-# 
 ```
 
 **All-in-one config file.** As in above pseudo-code, `config_file` is an all-in-one config of the training pipeline, model design, data processing and evaluation.
 
-# Detail Usage
+# Detail Usage 🕹
 
 A simple classification exp to show the power of SLC.
 
@@ -102,7 +112,7 @@ slc.train(slc_model)
 slc.evaluation(slc_model)
 ```
 
-# Notice
+# Notice ⛔️
 
 - /code folder should be more stastic and .gitignore file will ignore tracking operations in /experiment_space
 - data files can be orgnized like:
